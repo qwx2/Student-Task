@@ -17,7 +17,14 @@ const io = new Server(server, {
 });
 
 connectDB();
-app.use(cors());
+
+// Configure CORS for production
+const corsOptions = {
+    origin: process.env.CLIENT_URLs ? process.env.CLIENT_URLs.split(',') : "*",
+    credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.locals.io = io;
 

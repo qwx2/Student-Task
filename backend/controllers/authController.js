@@ -136,17 +136,17 @@ exports.verifyEmail = async (req, res) => {
 
   try {
     const user = await User.findOne({ email, verificationToken: token });
-    if (!user) return res.redirect("http://localhost:5173/verify-email?status=error");
+    if (!user) return res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=error`);
 
     user.verified = true;
     user.verificationToken = undefined;
     await user.save();
 
     // Redirect to frontend with success query
-    res.redirect("http://localhost:5173/verify-email?status=success");
+    res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=success`);
   } catch (err) {
     console.error(err.message);
-    res.redirect("http://localhost:5173/verify-email?status=error");
+    res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=error`);
   }
 };
 
@@ -168,8 +168,7 @@ exports.forgotPassword = async (req, res) => {
             auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
         });
 
-        // const resetUrl = `${process.env.REACT_APP_API_URL}/reset-password?token=${resetToken}&email=${email}`;
-        const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}&email=${email}`;
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${email}`;
 
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
